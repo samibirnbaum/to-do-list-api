@@ -36,6 +36,7 @@ group :development, :test do
   gem 'rails-erd', '~> 1.5', '>= 1.5.2'
   gem 'faker', '~> 1.8', '>= 1.8.7'
   gem 'shoulda-matchers', '~> 3.1', '>= 3.1.2'
+  gem 'rails-controller-testing'
 end
 
 group :development do
