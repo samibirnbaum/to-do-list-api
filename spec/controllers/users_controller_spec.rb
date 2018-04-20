@@ -41,4 +41,28 @@ RSpec.describe Api::UsersController, type: :controller do
             end
         end
     end
+
+    describe '#create' do
+        #no authentication to create an initial user
+        it 'assigns the correct form data to the object' do
+            post :create, params: {user: {username: "SamiB", email: "s@s.com", password: "password"}}
+            expect(assigns(:user).username).to eq("SamiB")
+            expect(assigns(:user).email).to eq("s@s.com")
+            expect(assigns(:user).password).to eq("password")
+        end
+        it 'adds user to the database when form filled correclty' do
+            expect {post :create, params: {user: {username: "SamiB", email: "s@s.com", password: "password"}}}.to change{User.all.count}.by(1)   
+        end
+        it 'returns new user as json' do
+            post :create, params: {user: {username: "SamiB", email: "s@s.com", password: "password"}}
+            json = JSON.parse(response.body)
+            expect(json["username"]).to eq("SamiB")
+            expect(json["password"]).to be_nil
+        end
+        it 'returns http 422 status when data filled incorrectly' do
+            post :create, params: {user: {username: "", email: "", password: ""}}
+            expect(response).to have_http_status(422)
+        end
+    
+    end
 end
