@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe Api::UsersController, type: :controller do
 
-    describe '#index' do
+    describe 'GET #index' do
         context 'without authentication' do
             it 'has an http status response of unauthorised' do
                 create(:user)
@@ -42,7 +42,7 @@ RSpec.describe Api::UsersController, type: :controller do
         end
     end
 
-    describe '#create' do
+    describe 'POST #create' do
         #no authentication to create an initial user
         it 'assigns the correct form data to the object' do
             post :create, params: {user: {username: "SamiB", email: "s@s.com", password: "password"}}
