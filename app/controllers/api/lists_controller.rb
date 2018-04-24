@@ -15,4 +15,14 @@ class Api::ListsController < ApiController
             render json: { errors: @list.errors.full_messages }, status: :unprocessable_entity
         end
     end
+
+    def destroy
+        begin
+            @list = List.find(params["id"])
+            @list.destroy
+            render json: {message: "The list '#{@list.name}' has been successfully deleted"}, status: :ok
+        rescue ActiveRecord::RecordNotFound
+            render json: {message: "this list does not exist in the database"}, status: :not_found 
+        end
+    end
 end

@@ -65,4 +65,32 @@ RSpec.describe Api::UsersController, type: :controller do
         end
     
     end
+
+    describe 'DELTE #destroy' do
+        context 'without authentication' do
+            it 'has an http status response of unauthorised' do
+                create(:user)
+                delete :destroy, params: {id: User.first.id}
+                expect(response).to have_http_status(401)
+            end
+        end
+        context 'with authentication' do
+            before do
+                create(:user)
+                request.env['HTTP_AUTHORIZATION'] = ActionController::HttpAuthentication::Basic.encode_credentials("SamiB","password")
+            end
+            it 'assigns to @user the correct user from the params' do
+                delete :destroy, params: {id: User.first.id}
+                expect(assigns(:user).id).to eq(1)
+            end
+            it 'when successful user no longer exists' do
+                delete :destroy, params: {id: User.first.id}
+                expect(User.first).to be_nil
+            end
+            it 'when user cant be found to begin with returns error' do
+                delete :destroy, params: {id: 2}
+                expect(response).to have_http_status(404)
+            end
+        end
+    end
 end

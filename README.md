@@ -17,10 +17,10 @@ small description
 <hr>
 
 ## Authenticate
-Apart from creating a User you will need to authenticate with the Api every time you make a request.
+**Apart from creating a User you will need to authenticate with the Api every time you make a request.
 Use `Basic Auth`. 
 You can do this using a tool like [Postman](https://www.getpostman.com/)
-Or [Curl](https://curl.haxx.se/) `curl -u username:password http://localhost:3000/api/users/`
+or [Curl](https://curl.haxx.se/) `curl -u username:password http://localhost:3000/api/users/`**
 
 <hr>
 
@@ -48,6 +48,16 @@ Path: http://localhost:3000/api/users
 
 Body: N/A
 
+### Delete a user
+Method: `DELETE`
+
+Path: http://localhost:3000/api/users/:user_id
+
+`:user_id` must be replaced with an integer of your own user id. This can be found from the create user response or by calling get all users.
+
+Body: N/A
+
+
 <hr>
 
 ## Lists
@@ -67,6 +77,17 @@ Body:
 	}
 }
 ```
+
+### Delete a list
+Method: `DELETE`
+
+Path: http://localhost:3000/api/users/:user_id/lists/:list_id
+
+`:user_id` must be replaced with an integer of your own user id. This can be found from the create user response or by calling get all users.
+
+`:list_id` must be replaced with an integer of your own list id. This can be found from the create list response.
+
+Body: N/A
 <hr>
 
 ## Items

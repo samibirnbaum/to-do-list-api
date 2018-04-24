@@ -19,4 +19,14 @@ class Api::UsersController < ApiController
             render json: { errors: @user.errors.full_messages }, status: :unprocessable_entity
         end
     end
+
+    def destroy
+        begin
+            @user = User.find(params[:id])
+            @user.destroy
+            render json: {message: "#{@user.username} successfully deleted"}, status: :ok
+        rescue ActiveRecord::RecordNotFound
+            render json: {message: "this user does not exist in the database"}, status: :not_found
+        end
+    end
 end

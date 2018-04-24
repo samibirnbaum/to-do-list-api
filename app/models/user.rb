@@ -2,7 +2,7 @@ class User < ApplicationRecord
     #@username
     #@password
     #@email
-    has_many :lists
+    has_many :lists, dependent: :destroy
 
     validates :username, :password, :email, presence: true
     
