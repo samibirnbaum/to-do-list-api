@@ -4,7 +4,7 @@ Rails.application.routes.draw do
       resources :lists
     end
     resources :lists, only: [] do
-      resources :items, only: [:create]
+      resources :items, only: [:create, :update]
     end
     resources :items, only: [:destroy]
   end
@@ -27,4 +27,5 @@ end
 #                DELETE /api/users/:user_id/lists/:id(.:format)       api/lists#destroy {:format=>:json}
 
 # api_list_items POST   /api/lists/:list_id/items(.:format)           api/items#create {:format=>:json}
+#                PUT    /api/lists/:list_id/items/:id(.:format)       api/items#update {:format=>:json}
 # api_item       DELETE /api/items/:id(.:format)                      api/items#destroy {:format=>:json}

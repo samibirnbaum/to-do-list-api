@@ -36,4 +36,40 @@ RSpec.describe Api::ItemsController, type: :controller do
             end
         end
     end
+
+    describe 'PUT #update' do
+        context 'without authentication' do
+            it 'returns unathorised error' do
+                create(:item)
+                put :update, params: {item: {name: "updated item", complete: true}, list_id: 1, id: 1}
+                expect(response).to have_http_status(401)
+            end
+        end
+        context 'with authentication' do
+            before do
+                create(:item)
+                request.env['HTTP_AUTHORIZATION'] = ActionController::HttpAuthentication::Basic.encode_credentials("SamiB","password")
+            end
+            it 'assigns new data to retrieved item object' do
+                put :update, params: {item: {name: "updated item", complete: true}, list_id: 1, id: 1}
+                expect(assigns(:item).name).to eq("updated item")
+                expect(assigns(:item).complete).to eq(true)
+                expect(assigns(:item).id).to eq(1)
+            end
+            it 'updates item in the database' do
+                put :update, params: {item: {name: "updated item", complete: true}, list_id: 1, id: 1}
+                expect(Item.first.name).to eq("updated item")
+            end
+            it 'returns json of updated item' do
+                put :update, params: {item: {name: "updated item", complete: true}, list_id: 1, id: 1}
+                json = JSON.parse(response.body)
+                expect(json["name"]).to eq("updated item")
+                expect(json["list_id"]).to be_nil
+            end
+            it 'returns 422 if data invalid' do
+                put :update, params: {item: {name: "", complete: ""}, list_id: 1, id: 1}
+                expect(response).to have_http_status(422)
+            end
+        end
+    end
 end

@@ -16,6 +16,18 @@ class Api::ListsController < ApiController
         end
     end
 
+    def update
+        @list = List.find(params["id"])
+        @list.name = params["list"]["name"]
+        @list.private = params["list"]["private"]
+
+        if @list.save
+            render json: @list
+        else
+            render json: { errors: @list.errors.full_messages }, status: :unprocessable_entity
+        end
+    end
+
     def destroy
         begin
             @list = List.find(params["id"])

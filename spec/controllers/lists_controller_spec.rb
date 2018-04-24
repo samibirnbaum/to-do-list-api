@@ -72,4 +72,39 @@ RSpec.describe Api::ListsController, type: :controller do
             end
         end
     end
+
+    describe 'PUT #update' do
+        context 'without authentication' do
+            it 'returns 401 error' do
+                create(:list)
+                put :update, params: {user_id: 1, id: 1, list: {name: "The Monday List", private: true}}
+                expect(response).to have_http_status(401)    
+            end
+        end
+        context 'with authentication' do
+            before do
+                create(:list)
+                request.env['HTTP_AUTHORIZATION'] = ActionController::HttpAuthentication::Basic.encode_credentials("SamiB","password")
+            end
+            it 'assigns new values to the object and retrieves the correct list object' do
+                put :update, params: {user_id: 1, id: 1, list: {name: "The Monday List", private: true}}
+                expect(assigns(:list).name).to eq("The Monday List")
+                expect(assigns(:list).id).to eq(1)
+            end
+            it 'updates the object in the database' do
+                put :update, params: {user_id: 1, id: 1, list: {name: "The Monday List", private: true}}
+                expect(List.first.name).to eq("The Monday List")
+            end
+            it 'returns new updated object' do
+                put :update, params: {user_id: 1, id: 1, list: {name: "The Monday List", private: true}}
+                json = JSON.parse(response.body)
+                expect(json["name"]).to eq("The Monday List")
+                expect(json["user_id"]).to be_nil
+            end
+            it 'returns errors if data recieved invalid' do
+                put :update, params: {user_id: 1, id: 1, list: {name: "", private: ""}}
+                expect(response).to have_http_status(422)
+            end
+        end
+    end
 end
